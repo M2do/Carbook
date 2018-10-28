@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/home_menu_id"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="Home" />
+
+        <item
+            android:id="@+id/profile_menu_id"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="Profile" />
+
+        <item
+            android:id="@+id/notification_menu_id"
+            android:icon="@drawable/ic_error_outline_black_24dp"
+            android:title="Notification" />
+
+        <item android:title="More Actions">
+            <menu>
+                <item
+                    android:id="@+id/share_menu_id"
+                    android:icon="@drawable/ic_share_black_24dp"
+                    android:title="Share" />
+
+                <item
+                    android:id="@+id/logout_menu_id"
+                    android:icon="@drawable/ic_power_settings_new_black_24dp"
+                    android:title="Logout" />
+            </menu>
+        </item>
+
+    </group>
+</menu>
