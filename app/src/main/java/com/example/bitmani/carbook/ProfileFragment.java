@@ -30,13 +30,16 @@ public class ProfileFragment extends Fragment {
 
         profilePicture = view.findViewById(R.id.profile_image_id);
 
+        /*
         if (currentUser != null) {
             Uri url = currentUser.getPhotoUrl();
             if (url != null) {
                 Toast.makeText(getActivity(), url.toString(), Toast.LENGTH_SHORT).show();
+            } else {
+                Picasso.get().load(url).into(profilePicture);
             }
-            //Picasso.get().load(url).into(profilePicture);
         }
+        */
 
         return view;
     }
