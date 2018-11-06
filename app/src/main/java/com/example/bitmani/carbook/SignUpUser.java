@@ -45,7 +45,7 @@ public class SignUpUser extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(SignUpUser.this, "Signup Successfull.", Toast.LENGTH_SHORT).show();
                                     GlobalDatas.currentUser = mAuth.getCurrentUser();
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), SignInUser.class);
                                     startActivity(intent);
                                     finish();
                                 } else {

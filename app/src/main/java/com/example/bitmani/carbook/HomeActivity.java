@@ -22,7 +22,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseAuth mAuth;
     private DrawerLayout drawer;
 
     @Override
@@ -55,8 +54,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = headerView.findViewById(R.id.loggedin_id);
-        mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = GlobalDatas.currentUser;
         String email = currentUser.getEmail();
         navUsername.setText(email);
 

@@ -52,6 +52,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
 
     private PlaceDetails sourcePlaceDetails;
     private PlaceDetails destinationPlaceDetails;
+
     private String currentDate;
     private String currentTime;
 
@@ -72,6 +73,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
         chooseDate = findViewById(R.id.date_picker_id);
         chooseTime = findViewById(R.id.time_picker_id);
         confirmButton = findViewById(R.id.confirm_button_id);
+
 
         fromCheck = findViewById(R.id.from_check_id);
         toCheck = findViewById(R.id.to_check_id);
@@ -145,6 +147,8 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                             .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
+
                                     Intent intent = new Intent(getApplicationContext(), OfferRideConfirmed.class);
                                     startActivity(intent);
                                     finish();
