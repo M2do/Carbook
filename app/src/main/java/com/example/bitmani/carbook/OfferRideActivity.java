@@ -2,11 +2,13 @@ package com.example.bitmani.carbook;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +52,8 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
 
     private PlaceDetails sourcePlaceDetails;
     private PlaceDetails destinationPlaceDetails;
+    private String currentDate;
+    private String currentTime;
 
     private boolean srcdst = true;
 
@@ -127,7 +131,28 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
             @Override
             public void onClick(View v) {
                 if (fromChosen && toChosen && dateChosen && timeChosen) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(OfferRideActivity.this);
+                    builder.setMessage("From : " + sourcePlaceDetails.getPlacename()
+                                        + "\n\nTo : " + destinationPlaceDetails.getPlacename()
+                                        + "\n\nDate : " + currentDate
+                                        +"\n\nTime : " + currentTime)
+                            .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(getApplicationContext(), OfferRideConfirmed.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
 
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
                 } else {
                     Toast.makeText(OfferRideActivity.this, "fill all above details", Toast.LENGTH_SHORT).show();
                 }
@@ -229,7 +254,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
+        currentDate = DateFormat.getDateInstance().format(calendar.getTime());
         dateCheck.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
         dateChosen = true;
     }
@@ -237,6 +262,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         timeCheck.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+        currentTime = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
         timeChosen = true;
     }
 }

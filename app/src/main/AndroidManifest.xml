@@ -28,12 +28,13 @@
         <activity android:name=".SignUpUser" />
         <activity android:name=".OfferRideActivity" />
         <activity android:name=".SearchRideActivity" />
-        <activity android:name=".RegisterCarActivity"></activity>
+        <activity android:name=".RegisterCarActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAR-Gq4_njdIbgYXjKhr-N6h4HLQbpKFiY" />
 
+        <activity android:name=".OfferRideConfirmed"></activity>
     </application>
 
 </manifest>
