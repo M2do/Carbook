@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,6 +32,12 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -52,6 +59,10 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
 
     private PlaceDetails sourcePlaceDetails;
     private PlaceDetails destinationPlaceDetails;
+    private DateData dateData;
+    private TimeData timeData;
+    private DatabaseReference mDatabase;
+
 
     private String currentDate;
     private String currentTime;
@@ -62,6 +73,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
     private boolean toChosen = false;
     private boolean dateChosen = false;
     private boolean timeChosen = false;
+    private String TAG = "CHECKING";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +86,8 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
         chooseTime = findViewById(R.id.time_picker_id);
         confirmButton = findViewById(R.id.confirm_button_id);
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mDatabase = database.getReference("OfferedRides");
 
         fromCheck = findViewById(R.id.from_check_id);
         toCheck = findViewById(R.id.to_check_id);
@@ -147,6 +161,27 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                             .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
+                                    OfferRideData offerRideData = new OfferRideData(sourcePlaceDetails, destinationPlaceDetails, dateData, timeData);
+                                    FirebaseUser currentUser = GlobalDatas.currentUser;
+                                    String email = currentUser.getEmail();
+                                    mDatabase.setValue(email);
+
+                                    mDatabase.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            // This method is called once with the initial value and again
+                                            // whenever data at this location is updated.
+                                            String value = dataSnapshot.getValue(String.class);
+                                            Log.d(TAG, "Value is: " + value);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError error) {
+                                            // Failed to read value
+                                            Log.w(TAG, "Failed to read value.", error.toException());
+                                        }
+                                    });
 
 
                                     Intent intent = new Intent(getApplicationContext(), OfferRideConfirmed.class);
@@ -260,6 +295,8 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         currentDate = DateFormat.getDateInstance().format(calendar.getTime());
         dateCheck.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+
+        dateData = new DateData(year, month, dayOfMonth);
         dateChosen = true;
     }
 
@@ -267,6 +304,8 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         timeCheck.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
         currentTime = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+
+        timeData = new TimeData(hourOfDay, minute);
         timeChosen = true;
     }
 }
