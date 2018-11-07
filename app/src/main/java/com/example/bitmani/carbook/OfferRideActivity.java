@@ -5,6 +5,8 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
@@ -31,6 +33,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +55,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
     private Button chooseDate;
     private Button chooseTime;
     private Button confirmButton;
+    private View rootLayout;
 
     private ImageView fromCheck;
     private ImageView toCheck;
@@ -85,9 +90,10 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
         chooseDate = findViewById(R.id.date_picker_id);
         chooseTime = findViewById(R.id.time_picker_id);
         confirmButton = findViewById(R.id.confirm_button_id);
+        rootLayout = findViewById(R.id.constraintLayout);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        mDatabase = database.getReference("OfferedRides");
+        mDatabase = database.getReference();
 
         fromCheck = findViewById(R.id.from_check_id);
         toCheck = findViewById(R.id.to_check_id);
@@ -161,33 +167,28 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                             .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+
+                                    rootLayout.setVisibility(View.GONE);
                                     FirebaseUser currentUser = GlobalDatas.currentUser;
                                     String email = currentUser.getEmail();
                                     OfferRideData offerRideData = new OfferRideData(email, sourcePlaceDetails, destinationPlaceDetails, dateData, timeData);
-                                    mDatabase.setValue(offerRideData);
-
-                                    /*
-                                    mDatabase.addValueEventListener(new ValueEventListener() {
+                                    mDatabase.child("OfferedRides").setValue(offerRideData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            // This method is called once with the initial value and again
-                                            // whenever data at this location is updated.
-                                            String value = dataSnapshot.getValue(String.class);
-                                            Log.d(TAG, "Value is: " + value);
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(OfferRideActivity.this, "You offered a ride", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getApplicationContext(), OfferRideConfirmed.class);
+                                            startActivity(intent);
+                                            finish();
                                         }
-
+                                    }).addOnFailureListener(new OnFailureListener() {
                                         @Override
-                                        public void onCancelled(DatabaseError error) {
-                                            // Failed to read value
-                                            Log.w(TAG, "Failed to read value.", error.toException());
+                                        public void onFailure(@NonNull Exception e) {
+                                            rootLayout.setVisibility(View.VISIBLE);
+                                            Snackbar snackbar = Snackbar.make(rootLayout, "Connection Error", Snackbar.LENGTH_SHORT);
+                                            snackbar.show();
                                         }
                                     });
-                                    */
 
-
-                                    Intent intent = new Intent(getApplicationContext(), OfferRideConfirmed.class);
-                                    startActivity(intent);
-                                    finish();
                                 }
                             });
 
