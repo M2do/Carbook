@@ -92,7 +92,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
         rootLayout = findViewById(R.id.constraintLayout);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        mDatabase = database.getReference();
+        mDatabase = database.getReference("OfferedRides");
 
         fromCheck = findViewById(R.id.from_check_id);
         toCheck = findViewById(R.id.to_check_id);
@@ -169,7 +169,9 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                                     FirebaseUser currentUser = GlobalDatas.currentUser;
                                     String email = currentUser.getEmail();
                                     OfferRideData offerRideData = new OfferRideData(email, sourcePlaceDetails, destinationPlaceDetails, dateData, timeData);
-                                    mDatabase.child("OfferedRides").setValue(offerRideData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    String offerId = mDatabase.push().getKey();
+
+                                    mDatabase.child(offerId).setValue(offerRideData).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Toast.makeText(OfferRideActivity.this, "You offered a ride", Toast.LENGTH_SHORT).show();
