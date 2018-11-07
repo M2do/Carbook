@@ -78,7 +78,6 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
     private boolean toChosen = false;
     private boolean dateChosen = false;
     private boolean timeChosen = false;
-    private String TAG = "CHECKING";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,8 +166,6 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                             .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
-                                    rootLayout.setVisibility(View.GONE);
                                     FirebaseUser currentUser = GlobalDatas.currentUser;
                                     String email = currentUser.getEmail();
                                     OfferRideData offerRideData = new OfferRideData(email, sourcePlaceDetails, destinationPlaceDetails, dateData, timeData);
@@ -183,7 +180,6 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            rootLayout.setVisibility(View.VISIBLE);
                                             Snackbar snackbar = Snackbar.make(rootLayout, "Connection Error", Snackbar.LENGTH_SHORT);
                                             snackbar.show();
                                         }
