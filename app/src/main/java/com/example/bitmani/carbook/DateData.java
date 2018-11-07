@@ -5,6 +5,9 @@ public class DateData {
     private int month;
     private int dayOfMonth;
 
+    public DateData() {
+    }
+
     public DateData(int year, int month, int dayOfMonth) {
         this.year = year;
         this.month = month;

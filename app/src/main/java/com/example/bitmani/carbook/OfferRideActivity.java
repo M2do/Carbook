@@ -161,12 +161,12 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                             .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-
-                                    OfferRideData offerRideData = new OfferRideData(sourcePlaceDetails, destinationPlaceDetails, dateData, timeData);
                                     FirebaseUser currentUser = GlobalDatas.currentUser;
                                     String email = currentUser.getEmail();
-                                    mDatabase.setValue(email);
+                                    OfferRideData offerRideData = new OfferRideData(email, sourcePlaceDetails, destinationPlaceDetails, dateData, timeData);
+                                    mDatabase.setValue(offerRideData);
 
+                                    /*
                                     mDatabase.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -182,6 +182,7 @@ public class OfferRideActivity extends AppCompatActivity implements GoogleApiCli
                                             Log.w(TAG, "Failed to read value.", error.toException());
                                         }
                                     });
+                                    */
 
 
                                     Intent intent = new Intent(getApplicationContext(), OfferRideConfirmed.class);

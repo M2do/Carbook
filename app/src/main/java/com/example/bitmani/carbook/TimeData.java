@@ -4,6 +4,9 @@ public class TimeData {
     private int hourOfDay;
     private int minute;
 
+    public TimeData() {
+    }
+
     public TimeData(int hourOfDay, int minute) {
         this.hourOfDay = hourOfDay;
         this.minute = minute;

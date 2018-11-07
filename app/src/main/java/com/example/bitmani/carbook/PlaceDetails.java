@@ -6,6 +6,9 @@ public class PlaceDetails {
     private String longitude;
     private String address;
 
+    public PlaceDetails() {
+    }
+
     public PlaceDetails(String placename, String latitude, String longitude, String address) {
         this.placename = placename;
         this.latitude = latitude;
