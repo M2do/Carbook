@@ -1,11 +1,13 @@
 package com.example.bitmani.carbook;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,19 +27,23 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.DateFormat;
 import java.util.Calendar;
 
-public class SearchRideActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, DatePickerDialog.OnDateSetListener{
+public class SearchRideActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, DatePickerDialog.OnDateSetListener {
     private GoogleApiClient mGoogleApiClient;
     private int PLACE_PICKER_REQUEST = 1;
 
     private Button chooseSource;
     private Button chooseDestination;
     private Button chooseDate;
+
+    private String currentDate;
 
     private Button SearchButton;
 
@@ -48,6 +54,7 @@ public class SearchRideActivity extends AppCompatActivity implements GoogleApiCl
 
     private PlaceDetails sourcePlaceDetails;
     private PlaceDetails destinationPlaceDetails;
+    private DateData dateData;
 
     private boolean srcdst = true;
 
@@ -117,7 +124,36 @@ public class SearchRideActivity extends AppCompatActivity implements GoogleApiCl
             @Override
             public void onClick(View v) {
                 if (fromChosen && toChosen && dateChosen) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SearchRideActivity.this);
+                    builder.setMessage("From : " + sourcePlaceDetails.getPlacename()
+                            + "\n\nTo : " + destinationPlaceDetails.getPlacename()
+                            + "\n\nDate : " + currentDate)
+                            .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            })
+                            .setPositiveButton("Search Ride", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(getApplicationContext(), SearchRideResult.class);
+                                    intent.putExtra("START_LATITUDE", Double.parseDouble(sourcePlaceDetails.getLatitude()));
+                                    intent.putExtra("START_LONGITUDE", Double.parseDouble(sourcePlaceDetails.getLongitude()));
 
+                                    intent.putExtra("END_LATITUDE", Double.parseDouble(destinationPlaceDetails.getLatitude()));
+                                    intent.putExtra("END_LONGITUDE", Double.parseDouble(destinationPlaceDetails.getLongitude()));
+
+                                    intent.putExtra("DATE_YEAR", dateData.getYear());
+                                    intent.putExtra("DATE_MONTH", dateData.getMonth());
+                                    intent.putExtra("DATE_DAY_OF_MONTH", dateData.getDayOfMonth());
+
+                                    startActivity(intent);
+                                }
+                            });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
                 } else {
                     Toast.makeText(SearchRideActivity.this, "fill all above details", Toast.LENGTH_SHORT).show();
                 }
@@ -217,8 +253,10 @@ public class SearchRideActivity extends AppCompatActivity implements GoogleApiCl
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
+
+        currentDate = DateFormat.getDateInstance().format(calendar.getTime());
         dateCheck.setColorFilter(getResources().getColor(R.color.colorPrimaryDark));
+        dateData = new DateData(year, month, dayOfMonth);
         dateChosen = true;
     }
 }

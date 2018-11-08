@@ -34,7 +34,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAR-Gq4_njdIbgYXjKhr-N6h4HLQbpKFiY" />
 
-        <activity android:name=".OfferRideConfirmed"></activity>
+        <activity android:name=".OfferRideConfirmed" />
+        <activity android:name=".SearchRideResult"></activity>
     </application>
 
 </manifest>

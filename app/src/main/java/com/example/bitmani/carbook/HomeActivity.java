@@ -30,7 +30,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Car Hooking");
+        toolbar.setTitle("Car Pooling");
         setSupportActionBar(toolbar);
 
 
