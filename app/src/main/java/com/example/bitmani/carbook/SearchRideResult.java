@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,8 +14,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class SearchRideResult extends AppCompatActivity {
     private static final String TAG = "SearchRideResult";
@@ -30,9 +37,16 @@ public class SearchRideResult extends AppCompatActivity {
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mTime = new ArrayList<>();
 
+    ArrayList<OfferRideData> offerRideDataArray = new ArrayList<>();
+    ArrayList<CarRegisterData> carRegisteredDataArray = new ArrayList<>();
+
     private LatitudeLongitude source;
     private LatitudeLongitude destination;
     private DateData dateData;
+
+    private DatabaseReference mDatabase1;
+    private DatabaseReference mDatabase2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +70,12 @@ public class SearchRideResult extends AppCompatActivity {
         dateData = new DateData(year, month, dayOfMonth);
 
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mDatabase1 = database.getReference("OfferedRides");
+        mDatabase2 = database.getReference("RegisteredCars");
+
         Toolbar toolbar = findViewById(R.id.toolbar_ride_search_result);
-        toolbar.setTitle("Ride Search Result");
+        toolbar.setTitle("Search Ride Result");
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
@@ -72,10 +90,9 @@ public class SearchRideResult extends AppCompatActivity {
             }
         });
 
-
         getSearchResultList();
-        initRecyclerView();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -103,81 +120,70 @@ public class SearchRideResult extends AppCompatActivity {
     }
 
     private void getSearchResultList() {
-        String url = "https://firebasestorage.googleapis.com/v0/b/carbook-34029.appspot.com/o/RegisteredCars%2F1541726106384.png?alt=media&token=d06b957a-08a2-47bf-96d0-7b08e5a0bb6f";
 
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    OfferRideData offerRideData = postSnapshot.getValue(OfferRideData.class);
+                    offerRideDataArray.add(offerRideData);
+                }
+                getRegisteredCarDetails();
+            }
 
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
-
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
-
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
-
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
-
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
-
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
-
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
-
-        mName.add("Mathura Tudu");
-        mphone.add("9932219030");
-        mImages.add(url);
-        mFrom.add("Mayurbhanj");
-        mTo.add("IIT Kharagpur");
-        mDate.add("12-12-1996");
-        mTime.add("12:45 AM");
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(SearchRideResult.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        mDatabase1.addValueEventListener(postListener);
     }
 
+    private void getRegisteredCarDetails() {
+        final ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    CarRegisterData carRegisterData = postSnapshot.getValue(CarRegisterData.class);
+                    carRegisteredDataArray.add(carRegisterData);
+                }
+
+                filterForRecyclerView();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(SearchRideResult.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        };
+        mDatabase2.addValueEventListener(postListener);
+    }
+
+    private void filterForRecyclerView() {
+        for (OfferRideData offerRideData : offerRideDataArray) {
+            String email1 = offerRideData.getEmail();
+            for (CarRegisterData carRegisterData : carRegisteredDataArray) {
+                String email2 = carRegisterData.getEmail();
+                if (email1.equals(email2)) {
+                    PlaceDetails placeDetails = offerRideData.getSourcePlaceDetails();
+                    double latitude = Double.parseDouble(placeDetails.getLatitude());
+                    double longitude = Double.parseDouble(placeDetails.getLongitude());
+                    LatitudeLongitude driverSource = new LatitudeLongitude(latitude, longitude);
+                    if (CalculationByDistance(source, driverSource) <= 3.0) {
+                        mName.add(carRegisterData.getOwnerName());
+                        mphone.add(carRegisterData.getPhoneNumber());
+                        mImages.add(carRegisterData.getOuterImageUrl());
+                        mFrom.add(offerRideData.getSourcePlaceDetails().getPlacename());
+                        mTo.add(offerRideData.getDestinationPlaceDetails().getPlacename());
+                        mDate.add(offerRideData.getDate().getDayOfMonth() + ":" + offerRideData.getDate().getMonth() + ":" + offerRideData.getDate().getYear());
+                        mTime.add(offerRideData.getTime().getHourOfDay() + ":" + offerRideData.getTime().getMinute());
+                    }
+                }
+            }
+        }
+
+        initRecyclerView();
+    }
 
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.ride_search_recycler_view);
@@ -185,6 +191,33 @@ public class SearchRideResult extends AppCompatActivity {
         SearchRideResultAdapter adapter = new SearchRideResultAdapter(this, mImages, mName, mphone, mFrom, mTo, mDate, mTime);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    public double CalculationByDistance(LatitudeLongitude StartP, LatitudeLongitude EndP) {
+        int Radius = 6371;// radius of earth in Km
+        double lat1 = StartP.getLatitude();
+        double lat2 = EndP.getLatitude();
+        double lon1 = StartP.getLongitude();
+        double lon2 = EndP.getLongitude();
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        double valueResult = Radius * c;
+        double km = valueResult / 1;
+        /*
+        DecimalFormat newFormat = new DecimalFormat("####");
+        int kmInDec = Integer.valueOf(newFormat.format(km));
+        double meter = valueResult % 1000;
+        int meterInDec = Integer.valueOf(newFormat.format(meter));
+        Log.i("Radius Value", "" + valueResult + "   KM  " + kmInDec
+                + " Meter   " + meterInDec);
+        return Radius * c;
+        */
+        return km;
     }
 
 }
