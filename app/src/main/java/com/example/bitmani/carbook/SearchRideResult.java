@@ -22,6 +22,8 @@ public class SearchRideResult extends AppCompatActivity {
     private static final double DEFAULT_DOUBLE = 1.0;
     private static final int DEFAULT_INT = 1;
 
+    private ArrayList<String> mName = new ArrayList<>();
+    private ArrayList<String> mphone = new ArrayList<>();
     private ArrayList<String> mImages = new ArrayList<>();
     private ArrayList<String> mFrom = new ArrayList<>();
     private ArrayList<String> mTo = new ArrayList<>();
@@ -103,54 +105,72 @@ public class SearchRideResult extends AppCompatActivity {
     private void getSearchResultList() {
         String url = "https://firebasestorage.googleapis.com/v0/b/carbook-34029.appspot.com/o/RegisteredCars%2F1541726106384.png?alt=media&token=d06b957a-08a2-47bf-96d0-7b08e5a0bb6f";
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
         mDate.add("12-12-1996");
         mTime.add("12:45 AM");
 
+        mName.add("Mathura Tudu");
+        mphone.add("9932219030");
         mImages.add(url);
         mFrom.add("Mayurbhanj");
         mTo.add("IIT Kharagpur");
@@ -162,7 +182,7 @@ public class SearchRideResult extends AppCompatActivity {
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.ride_search_recycler_view);
 
-        SearchRideResultAdapter adapter = new SearchRideResultAdapter(this, mImages, mFrom, mTo, mDate, mTime);
+        SearchRideResultAdapter adapter = new SearchRideResultAdapter(this, mImages, mName, mphone, mFrom, mTo, mDate, mTime);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

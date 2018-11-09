@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -23,15 +25,19 @@ public class SearchRideResultAdapter extends RecyclerView.Adapter<SearchRideResu
     private Context mContext;
 
     private ArrayList<String> mImages = new ArrayList<>();
+    private ArrayList<String> mName = new ArrayList<>();
+    private ArrayList<String> mPhone = new ArrayList<>();
     private ArrayList<String> mFrom = new ArrayList<>();
     private ArrayList<String> mTo = new ArrayList<>();
     private ArrayList<String> mDate = new ArrayList<>();
     private ArrayList<String> mTime = new ArrayList<>();
 
 
-    public SearchRideResultAdapter(Context mContext, ArrayList<String> mImages, ArrayList<String> mFrom, ArrayList<String> mTo, ArrayList<String> mDate, ArrayList<String> mTime) {
+    public SearchRideResultAdapter(Context mContext, ArrayList<String> mImages, ArrayList<String> mName, ArrayList<String> mPhone, ArrayList<String> mFrom, ArrayList<String> mTo, ArrayList<String> mDate, ArrayList<String> mTime) {
         this.mContext = mContext;
         this.mImages = mImages;
+        this.mName = mName;
+        this.mPhone = mPhone;
         this.mFrom = mFrom;
         this.mTo = mTo;
         this.mDate = mDate;
@@ -54,10 +60,13 @@ public class SearchRideResultAdapter extends RecyclerView.Adapter<SearchRideResu
                 .asBitmap()
                 .load(mImages.get(i))
                 .into(viewHolder.image);
-        viewHolder.from.setText("Odisha");
-        viewHolder.to.setText("West Bengal");
-        viewHolder.date.setText("12-12-1996");
-        viewHolder.time.setText("12:45 AM");
+
+        viewHolder.name.setText(mName.get(i));
+        viewHolder.phone.setText(mPhone.get(i));
+        viewHolder.from.setText(mFrom.get(i));
+        viewHolder.to.setText(mTo.get(i));
+        viewHolder.date.setText(mDate.get(i));
+        viewHolder.time.setText(mTime.get(i));
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,15 +83,22 @@ public class SearchRideResultAdapter extends RecyclerView.Adapter<SearchRideResu
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        CircleImageView image;
+        ImageView image;
+
+        TextView name;
+        TextView phone;
         TextView from;
         TextView to;
         TextView date;
         TextView time;
+        Button bookCar;
         ConstraintLayout parentLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            name = itemView.findViewById(R.id.owner_name);
+            phone = itemView.findViewById(R.id.owner_phone_number);
 
             image = itemView.findViewById(R.id.circular_image_id);
             from = itemView.findViewById(R.id.recycler_view_from_text);
@@ -90,7 +106,15 @@ public class SearchRideResultAdapter extends RecyclerView.Adapter<SearchRideResu
             date = itemView.findViewById(R.id.recycler_view_date);
             time = itemView.findViewById(R.id.recycler_view_time);
 
+            bookCar = itemView.findViewById(R.id.book_button_id);
             parentLayout = itemView.findViewById(R.id.search_ride_parent_layout);
+
+            bookCar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //..send notification
+                }
+            });
         }
     }
 }
