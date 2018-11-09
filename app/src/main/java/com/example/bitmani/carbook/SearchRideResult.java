@@ -3,6 +3,8 @@ package com.example.bitmani.carbook;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,10 +14,19 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
+
 public class SearchRideResult extends AppCompatActivity {
+    private static final String TAG = "SearchRideResult";
+
     private static final double DEFAULT_DOUBLE = 1.0;
     private static final int DEFAULT_INT = 1;
 
+    private ArrayList<String> mImages = new ArrayList<>();
+    private ArrayList<String> mFrom = new ArrayList<>();
+    private ArrayList<String> mTo = new ArrayList<>();
+    private ArrayList<String> mDate = new ArrayList<>();
+    private ArrayList<String> mTime = new ArrayList<>();
 
     private LatitudeLongitude source;
     private LatitudeLongitude destination;
@@ -58,8 +69,11 @@ public class SearchRideResult extends AppCompatActivity {
                 onBackPressed();
             }
         });
-    }
 
+
+        getSearchResultList();
+        initRecyclerView();
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -85,4 +99,72 @@ public class SearchRideResult extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void getSearchResultList() {
+        String url = "https://firebasestorage.googleapis.com/v0/b/carbook-34029.appspot.com/o/RegisteredCars%2F1541726106384.png?alt=media&token=d06b957a-08a2-47bf-96d0-7b08e5a0bb6f";
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+
+        mImages.add(url);
+        mFrom.add("Mayurbhanj");
+        mTo.add("IIT Kharagpur");
+        mDate.add("12-12-1996");
+        mTime.add("12:45 AM");
+    }
+
+
+    private void initRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.ride_search_recycler_view);
+
+        SearchRideResultAdapter adapter = new SearchRideResultAdapter(this, mImages, mFrom, mTo, mDate, mTime);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
 }
